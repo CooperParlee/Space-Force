@@ -78,15 +78,28 @@ public class Tracking : MonoBehaviour {
         float forwardDesired = controls.GetForward(); // What the player wants the power to be/maximum.
         float horDesired = controls.GetHorizontal();
 
-        float xApp = -Mathf.Sin(modRads); // What percent of power will be applied to each axis.
+        float xApp = Mathf.Sin(-modRads); // What percent of power will be applied to each axis.
         float yApp = Mathf.Cos(modRads);
 
         //float forwardError = forwardDesired - m_LastPowerX
 
+        xSpeed = xApp * SMax * forwardDesired;
+        ySpeed = yApp * SMax * forwardDesired;
+
+        Vector3 powerVector = new Vector3(xSpeed, 0, ySpeed);
+
         print("xTrig " + xApp);
         print("yTrig " + yApp);
-        print("Rad " + modRads);
-        //gameObject.transform.Translate(new Vector3(xSpeed, ySpeed, 0));
+
+        //print("X input " + horDesired);
+        print("Y input " + forwardDesired);
+        print("Power " + powerVector);
+        print("ySpeed " + ySpeed);
+
+        print("Deg " + modRads * Mathf.Rad2Deg);
+
+        //gameObject.transform.TransformVector(gameObject.transform.position + new Vector3(xSpeed, ySpeed, 0));
+        gameObject.transform.Translate(new Vector3(xSpeed, ySpeed, 0), Space.World);
     }
 
 }
