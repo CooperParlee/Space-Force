@@ -11,7 +11,8 @@ public class Tracking : MonoBehaviour {
     private const float AccPX = 0.001f; // The proportional constant for the forward acceleration of the character
     private const float ACCPY = 0.001f; // The proportional constants for the horizontal acceleration of the character
     private const float DecP = 0.001f; // The proportional constant for the inertial dampeners of the ship
-    private const float SMax = 0.05f; // The max speed in any given direction
+    private const float SMax = 0.07f; // The max speed in any given direction
+    private const float SMaxStrafe = 0.04f;
 
     private float xSpeed = 0.0f;
     private float ySpeed = 0.0f;
@@ -76,15 +77,18 @@ public class Tracking : MonoBehaviour {
         }
         float modRads = (currentRot + 90) * Mathf.Deg2Rad;
         float forwardDesired = controls.GetForward(); // What the player wants the power to be/maximum.
-        float horDesired = controls.GetHorizontal();
+        float horDesired = -controls.GetHorizontal();
 
         float xApp = Mathf.Sin(-modRads); // What percent of power will be applied to each axis.
         float yApp = Mathf.Cos(modRads);
 
+        float xAppHorizontal = -Mathf.Sin(modRads + 90 * Mathf.Deg2Rad);
+        float yAppHorizontal = Mathf.Cos(modRads + 90 * Mathf.Deg2Rad);
+
         //float forwardError = forwardDesired - m_LastPowerX
 
-        xSpeed = xApp * SMax * forwardDesired;
-        ySpeed = yApp * SMax * forwardDesired;
+        xSpeed = xApp * SMax * forwardDesired + xAppHorizontal * SMaxStrafe * horDesired;
+        ySpeed = yApp * SMax * forwardDesired + yAppHorizontal * SMaxStrafe * horDesired;
 
         Vector3 powerVector = new Vector3(xSpeed, 0, ySpeed);
 
