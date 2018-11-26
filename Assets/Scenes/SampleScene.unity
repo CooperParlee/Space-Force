@@ -221,8 +221,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 519420031}
-  animator: {fileID: 0}
-  controls: {fileID: 0}
+  animator: {fileID: 574662775}
+  controls: {fileID: 574662776}
 --- !u!212 &574662773
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -13,11 +13,11 @@ public class Tracking : MonoBehaviour {
     private const float DecP = 0.001f; // The proportional constant for the inertial dampeners of the ship
     private const float SMax = 0.05f; // The max speed in any given direction
 
-    private float m_XSpeed = 0.0f;
-    private float m_YSpeed = 0.0f;
-    private float m_CurrentRot;
-    private float m_LastPowerX = 0.0f;
-    private float m_LastPowerY = 0.0f;
+    private float xSpeed = 0.0f;
+    private float ySpeed = 0.0f;
+    private float currentRot;
+    private float lastPowerX = 0.0f;
+    private float lastPowerY = 0.0f;
     
     // Use this for initialization
     void Start () {
@@ -46,9 +46,9 @@ public class Tracking : MonoBehaviour {
 
     private void UpdateFeedForwardController()
     {
-        m_CurrentRot = gameObject.transform.rotation.eulerAngles.z - 90;
+        currentRot = gameObject.transform.rotation.eulerAngles.z - 90;
         float target = GetRadToMouse() * Mathf.Rad2Deg + 180;
-        float error = target - m_CurrentRot;
+        float error = target - currentRot;
         
         if (error > 180)
         {
@@ -60,7 +60,7 @@ public class Tracking : MonoBehaviour {
         }
         
         float power = error * RotP;
-        gameObject.transform.eulerAngles = new Vector3(0, 0, m_CurrentRot + power + 90); 
+        gameObject.transform.eulerAngles = new Vector3(0, 0, currentRot + power + 90); 
         
     }
 
@@ -74,7 +74,7 @@ public class Tracking : MonoBehaviour {
         {
             animator.SetBool("IsMoving", false);
         }
-        float modRads = (m_CurrentRot + 90) * Mathf.Deg2Rad;
+        float modRads = (currentRot + 90) * Mathf.Deg2Rad;
         float forwardDesired = controls.GetForward(); // What the player wants the power to be/maximum.
         float horDesired = controls.GetHorizontal();
 
