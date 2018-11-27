@@ -8,14 +8,14 @@ public class Tracking : MonoBehaviour {
     public Controls controls;
 
     private const float RotP = 0.105f; // The proportional constant for the rotation of the character
-    private const float AccPX = 0.001f; // The proportional constant for the forward acceleration of the character
-    private const float ACCPY = 0.001f; // The proportional constants for the horizontal acceleration of the character
+    private const float ACCP = 0.02f; // The proportional constant for the forward acceleration of the character
     private const float DecP = 0.001f; // The proportional constant for the inertial dampeners of the ship
     private const float SMax = 0.07f; // The max speed in any given direction
     private const float SMaxStrafe = 0.04f;
+    private const float SMaxReverse = 0.03f;
 
-    private float xSpeed = 0.0f;
-    private float ySpeed = 0.0f;
+    private float xPower = 0.0f;
+    private float yPower = 0.0f;
     private float currentRot;
     private float lastPowerX = 0.0f;
     private float lastPowerY = 0.0f;
@@ -86,24 +86,20 @@ public class Tracking : MonoBehaviour {
         float yAppHorizontal = Mathf.Cos(modRads + 90 * Mathf.Deg2Rad);
 
         //float forwardError = forwardDesired - m_LastPowerX
+        forwardDesired = Mathf.Max();
+        float xTarget = xApp * SMax * forwardDesired + xAppHorizontal * SMaxStrafe * horDesired; //PID stuff
+        float yTarget = yApp * SMax * forwardDesired + yAppHorizontal * SMaxStrafe * horDesired;
+        float xError = xTarget - lastPowerX;
+        float yError = yTarget - lastPowerY;
+        xPower = xError * ACCP;
+        yPower = yError * ACCP;
 
-        xSpeed = xApp * SMax * forwardDesired + xAppHorizontal * SMaxStrafe * horDesired;
-        ySpeed = yApp * SMax * forwardDesired + yAppHorizontal * SMaxStrafe * horDesired;
-
-        Vector3 powerVector = new Vector3(xSpeed, 0, ySpeed);
-
-        print("xTrig " + xApp);
-        print("yTrig " + yApp);
-
-        //print("X input " + horDesired);
-        print("Y input " + forwardDesired);
-        print("Power " + powerVector);
-        print("ySpeed " + ySpeed);
-
-        print("Deg " + modRads * Mathf.Rad2Deg);
-
+        print("Powerchange " + xPower);
+        print("Last " + lastPowerX);
         //gameObject.transform.TransformVector(gameObject.transform.position + new Vector3(xSpeed, ySpeed, 0));
-        gameObject.transform.Translate(new Vector3(xSpeed, ySpeed, 0), Space.World);
+        gameObject.transform.Translate(new Vector3(lastPowerX + xPower, lastPowerY + yPower, 0), Space.World);
+        lastPowerX = xPower + lastPowerX;
+        lastPowerY = yPower + lastPowerY;
     }
 
 }
