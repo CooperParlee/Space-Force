@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Controls : MonoBehaviour {
-    readonly float horizontalSpeed = 0.25f;
-    readonly float verticalSpeed = 0.75f;
-
     private bool m_Fire = false;
     private float m_Strafe = 0.0f;
     private float m_Forward = 0.0f;

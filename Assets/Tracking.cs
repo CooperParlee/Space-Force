@@ -8,11 +8,11 @@ public class Tracking : MonoBehaviour {
     public Controls controls;
 
     private const float RotP = 0.105f; // The proportional constant for the rotation of the character
-    private const float ACCP = 0.02f; // The proportional constant for the forward acceleration of the character
+    private const float ACCP = 0.03f; // The proportional constant for the forward acceleration of the character
     private const float DecP = 0.001f; // The proportional constant for the inertial dampeners of the ship
     private const float SMax = 0.07f; // The max speed in any given direction
     private const float SMaxStrafe = 0.04f;
-    private const float SMaxReverse = 0.03f;
+    private const float SMaxReverseTarget = -0.40f;
 
     private float xPower = 0.0f;
     private float yPower = 0.0f;
@@ -85,8 +85,8 @@ public class Tracking : MonoBehaviour {
         float xAppHorizontal = -Mathf.Sin(modRads + 90 * Mathf.Deg2Rad);
         float yAppHorizontal = Mathf.Cos(modRads + 90 * Mathf.Deg2Rad);
 
-        //float forwardError = forwardDesired - m_LastPowerX
-        forwardDesired = Mathf.Max();
+        forwardDesired = Mathf.Max(SMaxReverseTarget, forwardDesired);
+
         float xTarget = xApp * SMax * forwardDesired + xAppHorizontal * SMaxStrafe * horDesired; //PID stuff
         float yTarget = yApp * SMax * forwardDesired + yAppHorizontal * SMaxStrafe * horDesired;
         float xError = xTarget - lastPowerX;
@@ -94,7 +94,7 @@ public class Tracking : MonoBehaviour {
         xPower = xError * ACCP;
         yPower = yError * ACCP;
 
-        print("Powerchange " + xPower);
+        print("Target " + xTarget);
         print("Last " + lastPowerX);
         //gameObject.transform.TransformVector(gameObject.transform.position + new Vector3(xSpeed, ySpeed, 0));
         gameObject.transform.Translate(new Vector3(lastPowerX + xPower, lastPowerY + yPower, 0), Space.World);
