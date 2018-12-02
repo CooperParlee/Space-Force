@@ -22,9 +22,6 @@ public class Controls : MonoBehaviour {
         m_Forward = Input.GetAxisRaw("Vertical");
         m_Strafe = Input.GetAxisRaw("Horizontal");
         m_Turn = Input.GetAxisRaw("JoyRightX");
-        print("Yjoy" + m_Turn);
-        print("XHor" + m_Strafe);
-        print("XVert" + m_Forward);
 	}
 
     public bool AwaitFireInterrupt()

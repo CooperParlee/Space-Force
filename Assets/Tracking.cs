@@ -11,6 +11,7 @@ public class Tracking : MonoBehaviour {
     private const float RotP = 0.105f; // The proportional constant for the rotation of the character
     private const float AccP = 0.03f; // The proportional constant for the forward acceleration of the character
     private const float DecP = 0.001f; // The proportional constant for the inertial dampeners of the ship
+    private const float CameraP = 0.01f;
     private const float SMax = 0.10f; // The max speed in any given direction
     private const float SMaxStrafe = 0.02f;
     private const float SMaxReverseTarget = -0.20f;
@@ -34,6 +35,7 @@ public class Tracking : MonoBehaviour {
 	void Update () {
         UpdateFeedForwardController();
         UpdateFeedForwardAcceleration();
+        TrackCameraToShip();
 
     }
 
@@ -61,6 +63,15 @@ public class Tracking : MonoBehaviour {
         else if (isController)
         {
             target = target + -controls.GetRightStickX() * Time.deltaTime * ControllerTurnSensitivity;
+            print(target);
+            if (target > 360)
+            {
+                target = target - 360;
+            }
+            if (target < -360)
+            {
+                target = target + 360;
+            }
         }
         float error = target - currentRot;
         
@@ -116,6 +127,16 @@ public class Tracking : MonoBehaviour {
         gameObject.transform.Translate(new Vector3(lastPowerX + xPower, lastPowerY + yPower, 0), Space.World);
         lastPowerX = xPower + lastPowerX;
         lastPowerY = yPower + lastPowerY;
+    }
+
+    private void TrackCameraToShip()
+    {
+        float errorX = gameObject.transform.position.x - camera.transform.position.x;
+        float errorY = gameObject.transform.position.y - camera.transform.position.y;
+        float cameraPowerX = errorX * CameraP;
+        float cameraPowerY = errorY * CameraP;
+
+        camera.transform.Translate(new Vector3(cameraPowerX, cameraPowerY, 0));
     }
 
 }
