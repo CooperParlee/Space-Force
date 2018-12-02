@@ -12,14 +12,18 @@ public class Tracking : MonoBehaviour {
     private const float AccP = 0.03f; // The proportional constant for the forward acceleration of the character
     private const float DecP = 0.001f; // The proportional constant for the inertial dampeners of the ship
     private const float SMax = 0.10f; // The max speed in any given direction
-    private const float SMaxStrafe = 0.04f;
+    private const float SMaxStrafe = 0.02f;
     private const float SMaxReverseTarget = -0.20f;
+    private const float ControllerTurnSensitivity = 300f;
 
     private float xPower = 0.0f;
     private float yPower = 0.0f;
     private float currentRot;
     private float lastPowerX = 0.0f;
     private float lastPowerY = 0.0f;
+    private float target = 0;
+
+    private bool isController = true;
     
     // Use this for initialization
     void Start () {
@@ -50,7 +54,14 @@ public class Tracking : MonoBehaviour {
     private void UpdateFeedForwardController()
     {
         currentRot = gameObject.transform.rotation.eulerAngles.z - 90;
-        float target = GetRadToMouse() * Mathf.Rad2Deg + 180;
+        if (!isController)
+        {
+            target = GetRadToMouse() * Mathf.Rad2Deg + 180;
+        }
+        else if (isController)
+        {
+            target = target + -controls.GetRightStickX() * Time.deltaTime * ControllerTurnSensitivity;
+        }
         float error = target - currentRot;
         
         if (error > 180)
@@ -69,7 +80,7 @@ public class Tracking : MonoBehaviour {
 
     private void UpdateFeedForwardAcceleration()
     {
-        if(controls.GetForward() > 0) // Animation stuff
+        if(controls.GetLeftStickY() > 0) // Animation stuff
         {
             animator.SetBool("IsMoving", true);
             if (!sound.isPlaying)
@@ -83,8 +94,8 @@ public class Tracking : MonoBehaviour {
             sound.Stop();
         }
         float modRads = (currentRot + 90) * Mathf.Deg2Rad;
-        float forwardDesired = controls.GetForward(); // What the player wants the power to be/maximum.
-        float horDesired = -controls.GetHorizontal();
+        float forwardDesired = controls.GetLeftStickY(); // What the player wants the power to be/maximum.
+        float horDesired = -controls.GetLeftStickX();
 
         float xApp = Mathf.Sin(-modRads); // What percent of power will be applied to each axis.
         float yApp = Mathf.Cos(modRads);
@@ -101,8 +112,6 @@ public class Tracking : MonoBehaviour {
         xPower = xError * AccP;
         yPower = yError * AccP;
 
-        print("Target " + xTarget);
-        print("Last " + lastPowerX);
         //gameObject.transform.TransformVector(gameObject.transform.position + new Vector3(xSpeed, ySpeed, 0));
         gameObject.transform.Translate(new Vector3(lastPowerX + xPower, lastPowerY + yPower, 0), Space.World);
         lastPowerX = xPower + lastPowerX;
