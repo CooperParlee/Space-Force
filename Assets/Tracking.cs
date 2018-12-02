@@ -6,9 +6,10 @@ public class Tracking : MonoBehaviour {
     public new Camera camera;
     public Animator animator;
     public Controls controls;
+    public AudioSource sound;
 
     private const float RotP = 0.105f; // The proportional constant for the rotation of the character
-    private const float ACCP = 0.03f; // The proportional constant for the forward acceleration of the character
+    private const float AccP = 0.03f; // The proportional constant for the forward acceleration of the character
     private const float DecP = 0.001f; // The proportional constant for the inertial dampeners of the ship
     private const float SMax = 0.07f; // The max speed in any given direction
     private const float SMaxStrafe = 0.04f;
@@ -36,6 +37,7 @@ public class Tracking : MonoBehaviour {
     {
         Vector3 position = gameObject.transform.position;
         Vector3 mousepos = this.camera.ScreenToWorldPoint(Input.mousePosition);
+        
 
         float xdif = mousepos.x - position.x;
         float ydif = mousepos.y - position.y;
@@ -70,10 +72,15 @@ public class Tracking : MonoBehaviour {
         if(controls.GetForward() != 0) // Animation stuff
         {
             animator.SetBool("IsMoving", true);
+            if (!sound.isPlaying)
+            {
+                sound.Play();
+            }
         }
         else
         {
             animator.SetBool("IsMoving", false);
+            sound.Stop();
         }
         float modRads = (currentRot + 90) * Mathf.Deg2Rad;
         float forwardDesired = controls.GetForward(); // What the player wants the power to be/maximum.
@@ -91,8 +98,8 @@ public class Tracking : MonoBehaviour {
         float yTarget = yApp * SMax * forwardDesired + yAppHorizontal * SMaxStrafe * horDesired;
         float xError = xTarget - lastPowerX;
         float yError = yTarget - lastPowerY;
-        xPower = xError * ACCP;
-        yPower = yError * ACCP;
+        xPower = xError * AccP;
+        yPower = yError * AccP;
 
         print("Target " + xTarget);
         print("Last " + lastPowerX);
