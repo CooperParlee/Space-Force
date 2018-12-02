@@ -11,9 +11,9 @@ public class Tracking : MonoBehaviour {
     private const float RotP = 0.105f; // The proportional constant for the rotation of the character
     private const float AccP = 0.03f; // The proportional constant for the forward acceleration of the character
     private const float DecP = 0.001f; // The proportional constant for the inertial dampeners of the ship
-    private const float SMax = 0.07f; // The max speed in any given direction
+    private const float SMax = 0.10f; // The max speed in any given direction
     private const float SMaxStrafe = 0.04f;
-    private const float SMaxReverseTarget = -0.40f;
+    private const float SMaxReverseTarget = -0.20f;
 
     private float xPower = 0.0f;
     private float yPower = 0.0f;
@@ -69,7 +69,7 @@ public class Tracking : MonoBehaviour {
 
     private void UpdateFeedForwardAcceleration()
     {
-        if(controls.GetForward() != 0) // Animation stuff
+        if(controls.GetForward() > 0) // Animation stuff
         {
             animator.SetBool("IsMoving", true);
             if (!sound.isPlaying)
