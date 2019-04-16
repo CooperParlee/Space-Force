@@ -7,15 +7,21 @@ public class Tracking : MonoBehaviour {
     public Animator animator;
     public Controls controls;
     public AudioSource sound;
+    public LaserTurret laser;
 
     private const float RotP = 0.105f; // The proportional constant for the rotation of the character
     private const float AccP = 0.03f; // The proportional constant for the forward acceleration of the character
     private const float DecP = 0.001f; // The proportional constant for the inertial dampeners of the ship
-    private const float CameraP = 0.01f;
+    private const float CameraP = 0.03f;
+
     private const float SMax = 0.10f; // The max speed in any given direction
     private const float SMaxStrafe = 0.02f;
     private const float SMaxReverseTarget = -0.20f;
+
     private const float ControllerTurnSensitivity = 300f;
+
+    private const float LargeStarTransFactor = 1f;
+    private const float SmallStarTransFactor = 0.5f;
 
     private float xPower = 0.0f;
     private float yPower = 0.0f;
@@ -24,17 +30,17 @@ public class Tracking : MonoBehaviour {
     private float lastPowerY = 0.0f;
     private float target = 0;
 
-    private bool isController = true;
+    private bool isController = false;
     
     // Use this for initialization
     void Start () {
-		
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        UpdateFeedForwardController();
-        UpdateFeedForwardAcceleration();
+        UpdatePIDOrientation();
+        UpdatePIDAcceleration();
         TrackCameraToShip();
 
     }
@@ -53,7 +59,7 @@ public class Tracking : MonoBehaviour {
         return rad;
     }
 
-    private void UpdateFeedForwardController()
+    private void UpdatePIDOrientation()
     {
         currentRot = gameObject.transform.rotation.eulerAngles.z - 90;
         if (!isController)
@@ -89,7 +95,7 @@ public class Tracking : MonoBehaviour {
         
     }
 
-    private void UpdateFeedForwardAcceleration()
+    private void UpdatePIDAcceleration()
     {
         if(controls.GetLeftStickY() > 0) // Animation stuff
         {
