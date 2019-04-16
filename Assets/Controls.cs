@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Controls : MonoBehaviour {
+    private const float timeout = 5;
+    private float m_TimeSinceLastInterval;
     private bool m_Fire = false;
     private float m_Strafe = 0.0f;
     private float m_Forward = 0.0f;
@@ -18,7 +20,14 @@ public class Controls : MonoBehaviour {
         if (Input.GetButtonDown("Fire1"))
         {
             m_Fire = true;
+            m_TimeSinceLastInterval = Time.realtimeSinceStartup;
         }
+        if (m_Fire && Time.realtimeSinceStartup - m_TimeSinceLastInterval > timeout) 
+        {
+            print("Interval timeout occurred");
+            m_Fire = false;
+        }
+        
         m_Forward = Input.GetAxisRaw("Vertical");
         m_Strafe = Input.GetAxisRaw("Horizontal");
         m_Turn = Input.GetAxisRaw("JoyRightX");
