@@ -41,6 +41,7 @@ public class Tracking : MonoBehaviour {
 	void Update () {
         UpdatePIDOrientation();
         UpdatePIDAcceleration();
+        UpdateLaserTurret();
         TrackCameraToShip();
 
     }
@@ -94,7 +95,13 @@ public class Tracking : MonoBehaviour {
         gameObject.transform.eulerAngles = new Vector3(0, 0, currentRot + power + 90); 
         
     }
-
+    private void UpdateLaserTurret()
+    {
+        if (controls.AwaitFireInterrupt())
+        {
+            laser.FireLaser(90, 1);
+        }
+    }
     private void UpdatePIDAcceleration()
     {
         if(controls.GetLeftStickY() > 0) // Animation stuff
