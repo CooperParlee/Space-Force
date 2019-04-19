@@ -7,6 +7,7 @@ public class Tracking : MonoBehaviour {
     public Animator animator;
     public Controls controls;
     public AudioSource sound;
+    public AudioSource cannonSound;
     private LaserTurret laser;
 
     private const float RotP = 0.105f; // The proportional constant for the rotation of the character
@@ -35,7 +36,7 @@ public class Tracking : MonoBehaviour {
     // Use this for initialization
     void Start () {
         laser = gameObject.AddComponent<LaserTurret>();
-        laser.Init(this);
+        laser.Init(this, cannonSound);
 	}
 	
 	// Update is called once per frame
@@ -100,7 +101,7 @@ public class Tracking : MonoBehaviour {
     {
         if (controls.AwaitFireInterrupt())
         {
-            laser.FireLaser(90, 1);
+            laser.FireLaser(gameObject.transform.eulerAngles.z, 1);
         }
     }
     private void UpdatePIDAcceleration()

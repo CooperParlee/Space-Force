@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Controls.cs" />
+    <Compile Include="Assets\Laser.cs" />
     <Compile Include="Assets\LaserTurret.cs" />
     <Compile Include="Assets\StarNoise.cs" />
     <Compile Include="Assets\Tracking.cs" />
