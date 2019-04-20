@@ -28,7 +28,7 @@ public class LaserTurret : MonoBehaviour {
             renderer.sprite = GenerateSprite(Resources.Load<Texture2D>("Sprites/Laser_Turret"));
             pulse.transform.position = shipMain.transform.position;
             Laser pulseBehavior = pulse.AddComponent<Laser>() as Laser;
-            pulseBehavior.Init(angle);
+            pulseBehavior.Init(angle, shipMain.GetMousePosition());
 
             lastFire = Time.realtimeSinceStartup;
         }

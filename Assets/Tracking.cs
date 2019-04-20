@@ -51,7 +51,7 @@ public class Tracking : MonoBehaviour {
     public float GetRadToMouse()
     {
         Vector3 position = gameObject.transform.position;
-        Vector3 mousepos = this.camera.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousepos = GetMousePosition();
         
 
         float xdif = mousepos.x - position.x;
@@ -157,6 +157,11 @@ public class Tracking : MonoBehaviour {
     public Vector3 GetShipPosition()
     {
         return gameObject.transform.position;
+    }
+
+    public Vector3 GetMousePosition()
+    {
+        return this.camera.ScreenToWorldPoint(Input.mousePosition);
     }
 
 }
